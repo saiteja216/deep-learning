@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriShield AI | Precision Agriculture Command Platform</title>
+    <meta name="description" content="Precision Agriculture Command Platform: Dual Model Diagnosis (YOLOv8 + Deep CNN Grad-CAM++), 16 Crop Datasets, 16 Research Papers (2024-2025), Yield Impact Simulator, and Live India Weather Telemetry.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Top Command Header -->
+        <header class="navbar">
+            <div class="nav-brand">
+                <div class="brand-text">
+                    <div class="brand-header-row">
+                        <h1>AgriShield AI</h1>
+                        <span class="live-status-chip">SYSTEM ONLINE</span>
+                    </div>
+                    <span class="brand-tagline">Precision Agriculture Command Platform & Dual AI Diagnostic Engine</span>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="nav-tabs">
+                <button type="button" class="nav-btn active" data-tab="tab-predictor">
+                    Dual AI Predictor
+                </button>
+                <button type="button" class="nav-btn" data-tab="tab-simulator">
+                    Yield Loss Simulator
+                </button>
+                <button type="button" class="nav-btn" data-tab="tab-datasets">
+                    16 Crop Datasets
+                </button>
+                <button type="button" class="nav-btn" data-tab="tab-ml-scores">
+                    Faculty Evaluation & ML Scores
+                </button>
+                <button type="button" class="nav-btn" data-tab="tab-weather">
+                    India Live Weather API
+                </button>
+                <button type="button" class="nav-btn" data-tab="tab-research">
+                    16 Research Papers (2024–2025)
+                </button>
+            </nav>
+        </header>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+
+            <!-- ========================================== -->
+            <!-- TAB 1: DUAL AI PREDICTOR & INFERENCE -->
+            <!-- ========================================== -->
+            <section id="tab-predictor" class="tab-pane active">
+                <div class="page-intro">
+                    <div class="intro-header-flex">
+                        <div>
+                            <h2>Dual-Model Crop Disease Diagnostic Engine</h2>
+                            <p>Combines <strong>YOLO (Bounding-Box Lesion Detection)</strong> and <strong>Deep CNN (Classification & Grad-CAM++ Heatmaps)</strong> with uploaded leaf analysis & weather telemetry.</p>
+                        </div>
+                        <button type="button" id="btnPrintReport" class="btn-secondary-action">
+                            Print / Export Diagnostic Report
+                        </button>
+                    </div>
+                </div>
+
+                <div class="predictor-grid">
+                    <!-- Input Sidebar -->
+                    <div class="predictor-sidebar">
+                        
+                        <!-- Model Architecture Switcher -->
+                        <div class="panel-card">
+                            <div class="panel-header">
+                                <span class="panel-tag">MODE</span>
+                                <div>
+                                    <h3>Model Architecture Selection</h3>
+                                    <p>Select diagnostic inference engine</p>
+                                </div>
+                            </div>
+                            <div class="model-mode-selector">
+                                <label class="radio-option active">
+                                    <input type="radio" name="modelMode" value="dual" checked>
+                                    <span class="radio-label">
+                                        <strong>Dual Pipeline (YOLO + CNN)</strong>
+                                        <small>YOLO Detection & Localization + CNN Grad-CAM++</small>
+                                    </span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="modelMode" value="yolo">
+                                    <span class="radio-label">
+                                        <strong>Model 1: YOLOv8 / YOLOv9 Only</strong>
+                                        <small>Real-time bounding-box lesion detection & counting</small>
+                                    </span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="modelMode" value="cnn">
+                                    <span class="radio-label">
+                                        <strong>Model 2: Deep CNN + Grad-CAM++</strong>
+                                        <small>MobileNetV2 / ResNet-50 Feature Classification</small>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Target Crop Selector & Custom Image Upload -->
+                        <div class="panel-card">
+                            <div class="panel-header">
+                                <span class="panel-tag">CROP & IMAGE</span>
+                                <div>
+                                    <h3>Upload Custom Leaf Photo</h3>
+                                    <p>Upload your image to render Grad-CAM++ heatmap</p>
+                                </div>
+                            </div>
+
+                            <div class="crop-grid-select">
+                                <button type="button" class="crop-btn active" data-crop="tomato">Tomato</button>
+                                <button type="button" class="crop-btn" data-crop="rice">Rice</button>
+                                <button type="button" class="crop-btn" data-crop="corn">Corn / Maize</button>
+                                <button type="button" class="crop-btn" data-crop="wheat">Wheat</button>
+                            </div>
+
+                            <!-- Interactive Custom Leaf Upload Box -->
+                            <div class="upload-box" id="dropZone">
+                                <input type="file" id="leafFileInput" accept="image/*" class="file-input-hidden">
+                                <div class="upload-placeholder" id="uploadPlaceholder">
+                                    <h4>Click or Drag Your Custom Leaf Image Here</h4>
+                                    <p>Supports JPG, PNG, WEBP high-resolution photos</p>
+                                </div>
+                                <div class="upload-preview-wrapper hidden" id="previewWrapper">
+                                    <img id="leafImgPreview" src="" alt="Uploaded Custom Leaf Preview">
+                                    <button type="button" id="btnClearImage" class="btn-clear">✕ Clear Image</button>
+                                </div>
+                            </div>
+
+                            <!-- Heatmap Opacity Controls -->
+                            <div class="slider-group" style="margin-top: 10px;">
+                                <div class="slider-row">
+                                    <label for="heatmapOpacitySlider">Grad-CAM++ Heatmap Opacity</label>
+                                    <span class="slider-val" id="valOpacity">75%</span>
+                                </div>
+                                <input type="range" id="heatmapOpacitySlider" min="0" max="100" value="75" step="5" class="slider-bar">
+                            </div>
+
+                            <!-- Sample Presets -->
+                            <div class="sample-preset-section">
+                                <label class="section-label">Or Pick Preset Sample Image:</label>
+                                <div class="sample-chip-group" id="sampleChips">
+                                    <!-- Populated dynamically by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Weather Parameters -->
+                        <div class="panel-card">
+                            <div class="panel-header">
+                                <span class="panel-tag">WEATHER</span>
+                                <div>
+                                    <h3>Regional Weather Parameters</h3>
+                                    <p>Indian Farming Meteorological Inputs</p>
+                                </div>
+                            </div>
+
+                            <div class="region-picker">
+                                <label for="hubSelect">Select Agricultural Hub:</label>
+                                <select id="hubSelect" class="form-select">
+                                    <option value="nashik">Nashik, Maharashtra (Tomato)</option>
+                                    <option value="karnal">Karnal, Haryana (Wheat & Paddy)</option>
+                                    <option value="guntur">Guntur, Andhra Pradesh (Rice & Chilli)</option>
+                                    <option value="medak">Medak / Nizamabad, Telangana (Maize)</option>
+                                    <option value="ludhiana">Ludhiana, Punjab (Wheat & Paddy)</option>
+                                    <option value="pune">Pune / Rahuri, Maharashtra (Tomato)</option>
+                                </select>
+                            </div>
+
+                            <div class="slider-group">
+                                <div class="slider-row">
+                                    <label>Temperature (°C)</label>
+                                    <span class="slider-val" id="valTemp">34.0 °C</span>
+                                </div>
+                                <input type="range" id="inputTemp" min="10" max="45" value="34.0" step="0.5" class="slider-bar">
+                            </div>
+
+                            <div class="slider-group">
+                                <div class="slider-row">
+                                    <label>Relative Humidity (%)</label>
+                                    <span class="slider-val" id="valHum">78 %</span>
+                                </div>
+                                <input type="range" id="inputHum" min="15" max="100" value="78" step="1" class="slider-bar">
+                            </div>
+
+                            <div class="slider-group">
+                                <div class="slider-row">
+                                    <label>Rainfall (mm / week)</label>
+                                    <span class="slider-val" id="valRain">42 mm</span>
+                                </div>
+                                <input type="range" id="inputRain" min="0" max="150" value="42" step="1" class="slider-bar">
+                            </div>
+
+                            <button type="button" id="btnRunInference" class="btn-execute">
+                                Execute Dual AI Diagnosis
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- Predictor Output Viewport -->
+                    <div class="predictor-viewport">
+                        
+                        <!-- Top Diagnosis Summary Card -->
+                        <div class="diagnosis-banner-card" id="diagnosisBanner">
+                            <div class="banner-top">
+                                <span class="badge-status" id="diagStatusBadge">DISEASE DETECTED</span>
+                                <span class="badge-crop" id="diagCropBadge">Crop: Tomato</span>
+                                <span class="badge-tech">LATENCY: 24.5ms</span>
+                            </div>
+                            <div class="banner-main">
+                                <div>
+                                    <h3 id="diagTitle">Tomato Yellow Leaf Curl Virus (TYLCV)</h3>
+                                    <p id="diagSubtext">Viral pathogen transmitted by Whitefly (Bemisia tabaci) vectors under high temperature & humidity stress.</p>
+                                </div>
+                                <div class="score-pill">
+                                    <span class="score-label">AI Confidence</span>
+                                    <span class="score-num" id="diagConfScore">98.7%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dual Model Output Cards (Uploaded Image + Grad-CAM Heatmap Overlay) -->
+                        <div class="dual-model-grid" id="dualModelGrid">
+                            
+                            <!-- MODEL 1: YOLO DETECTION CARD -->
+                            <div class="model-output-card" id="cardYolo">
+                                <div class="model-card-header">
+                                    <div class="model-badge yolo-tag">Model 1: YOLOv8 / YOLOv9</div>
+                                    <span class="model-spec">Real-Time Object Detection & Bounding Box</span>
+                                </div>
+                                
+                                <div class="canvas-wrapper">
+                                    <div class="box-tag-label">Uploaded Image + YOLO Bounding Boxes</div>
+                                    <div class="image-box" id="yoloImageContainer">
+                                        <img id="imgYoloUploaded" src="" alt="Uploaded Leaf YOLO View" class="uploaded-render-img">
+                                        <svg id="yoloSvgCanvas" class="canvas-svg" viewBox="0 0 600 400" preserveAspectRatio="none">
+                                            <!-- Dynamic Graphic Fallback -->
+                                        </svg>
+                                        <div class="yolo-bbox" id="yoloBbox1">
+                                            <span class="bbox-label" id="yoloBboxLabel">TYLCV Lesion 98.7%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="model-stats-row">
+                                    <div class="stat-item">
+                                        <span class="stat-lbl">Objects Found</span>
+                                        <span class="stat-val" id="yoloObjCount">3 Lesion Spots</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-lbl">Detection mAP@0.5</span>
+                                        <span class="stat-val" id="yolomAP">96.40%</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-lbl">Inference Latency</span>
+                                        <span class="stat-val" id="yoloLatency">24.5 ms</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- MODEL 2: CNN GRAD-CAM HEATMAP CARD -->
+                            <div class="model-output-card" id="cardCnn">
+                                <div class="model-card-header">
+                                    <div class="model-badge cnn-tag">Model 2: Deep CNN + Grad-CAM++</div>
+                                    <span class="model-spec">MobileNetV2 / ResNet-50 Feature Heatmap</span>
+                                </div>
+
+                                <div class="canvas-wrapper">
+                                    <div class="box-tag-label">Uploaded Image + Grad-CAM++ Heatmap Overlay</div>
+                                    <div class="image-box heatmap-wrapper">
+                                        <img id="imgCnnUploaded" src="" alt="Uploaded Leaf Heatmap View" class="uploaded-render-img">
+                                        <svg id="cnnSvgCanvas" class="canvas-svg" viewBox="0 0 600 400" preserveAspectRatio="none">
+                                            <!-- Dynamic Graphic Fallback -->
+                                        </svg>
+                                        <div class="gradcam-overlay" id="gradcamOverlay"></div>
+                                    </div>
+                                </div>
+
+                                <div class="model-stats-row">
+                                    <div class="stat-item">
+                                        <span class="stat-lbl">Classification Acc</span>
+                                        <span class="stat-val" id="cnnAcc">98.72%</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-lbl">Grad-CAM Match Ratio</span>
+                                        <span class="stat-val" id="cnnIoU">99.30%</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-lbl">Parameters</span>
+                                        <span class="stat-val" id="cnnParams">3.4M (MobileNetV2)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Weather Suitability & Outbreak Risk Card -->
+                        <div class="panel-card weather-risk-panel">
+                            <div class="panel-header">
+                                <span class="panel-tag">ANALYTICS</span>
+                                <div>
+                                    <h3>Crop Weather Suitability & Outbreak Risk Evaluation</h3>
+                                    <p>Indian Meteorological Stress Metrics</p>
+                                </div>
+                            </div>
+
+                            <div class="risk-gauge-layout">
+                                <div class="gauge-display">
+                                    <div class="gauge-ring" id="gaugeRing">
+                                        <span class="gauge-val" id="suitabilityPct">42.5%</span>
+                                    </div>
+                                    <span class="gauge-sub">Suitability Index</span>
+                                </div>
+                                <div class="risk-details">
+                                    <div class="risk-pill-badge" id="riskLevelBadge">SEVERE WEATHER STRESS</div>
+                                    <h4 id="riskSummaryTitle">High Environmental Vulnerability to Viral Vector Outbreak</h4>
+                                    <p id="riskSummaryDesc">Ambient temperature (34°C) and relative humidity (78%) deviate significantly from optimal crop physiological thresholds, impairing Systemic Acquired Resistance (SAR).</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4-Phase Actionable Precautions Protocol -->
+                        <div class="panel-card">
+                            <div class="panel-header">
+                                <span class="panel-tag">ADVISORY</span>
+                                <div>
+                                    <h3>Actionable 4-Phase Advisory & Treatment Protocol</h3>
+                                    <p>Step-by-Step Agronomic Guidelines for Farmers</p>
+                                </div>
+                            </div>
+
+                            <div class="phase-timeline" id="advisoryPhases">
+                                <!-- Dynamically generated by JS -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TAB 2: YIELD LOSS & ECONOMIC SIMULATOR -->
+            <!-- ========================================== -->
+            <section id="tab-simulator" class="tab-pane">
+                <div class="page-intro">
+                    <h2>Foliar Disease Severity & Economic Yield Simulator</h2>
+                    <p>Simulates predicted crop yield loss (Quintals/Acre) and economic impact (INR ₹) based on disease severity percentage and weather stress.</p>
+                </div>
+
+                <div class="simulator-grid">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <span class="panel-tag">SIMULATOR INPUTS</span>
+                            <div>
+                                <h3>Agronomic Field Parameters</h3>
+                                <p>Adjust severity & farm area to compute financial impact</p>
+                            </div>
+                        </div>
+
+                        <div class="slider-group">
+                            <div class="slider-row">
+                                <label for="simSeveritySlider">Foliar Disease Severity Index (%)</label>
+                                <span class="slider-val" id="valSimSeverity">35%</span>
+                            </div>
+                            <input type="range" id="simSeveritySlider" min="5" max="95" value="35" step="5" class="slider-bar">
+                        </div>
+
+                        <div class="slider-group">
+                            <div class="slider-row">
+                                <label for="simAcresSlider">Total Cultivated Farm Area (Acres)</label>
+                                <span class="slider-val" id="valSimAcres">5.0 Acres</span>
+                            </div>
+                            <input type="range" id="simAcresSlider" min="0.5" max="50" value="5.0" step="0.5" class="slider-bar">
+                        </div>
+
+                        <div class="region-picker">
+                            <label for="simCropSelect">Select Target Crop:</label>
+                            <select id="simCropSelect" class="form-select">
+                                <option value="tomato">Tomato (Solanum lycopersicum) - MSP: ₹1,800 / Qtl</option>
+                                <option value="rice">Rice Paddy (Oryza sativa) - MSP: ₹2,183 / Qtl</option>
+                                <option value="corn">Maize / Corn (Zea mays) - MSP: ₹2,090 / Qtl</option>
+                                <option value="wheat">Wheat (Triticum aestivum) - MSP: ₹2,275 / Qtl</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <span class="panel-tag">SIMULATOR OUTPUTS</span>
+                            <div>
+                                <h3>Predicted Yield & Economic Loss Assessment</h3>
+                                <p>Real-time financial vulnerability calculation</p>
+                            </div>
+                        </div>
+
+                        <div class="telemetry-grid">
+                            <div class="telem-box">
+                                <div class="telem-info">
+                                    <span class="telem-label">Expected Normal Yield</span>
+                                    <span class="telem-value" id="simNormalYield">120 Qtl</span>
+                                    <span class="telem-sub">Baseline Uninfected</span>
+                                </div>
+                            </div>
+
+                            <div class="telem-box">
+                                <div class="telem-info">
+                                    <span class="telem-label">Predicted Yield Loss</span>
+                                    <span class="telem-value" id="simLossQtl" style="color:#dc2626;">42 Qtl (35.0%)</span>
+                                    <span class="telem-sub">Disease Damage</span>
+                                </div>
+                            </div>
+
+                            <div class="telem-box" style="grid-column: span 2;">
+                                <div class="telem-info">
+                                    <span class="telem-label">Estimated Financial Revenue Impact</span>
+                                    <span class="telem-value" id="simLossINR" style="color:#dc2626; font-size:22px;">₹ 75,600 INR</span>
+                                    <span class="telem-sub">Estimated loss across farm acreage without intervention</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="weather-analysis-note" id="simAdviceNote">
+                            <strong>Agronomic Recommendation:</strong> Immediate intervention with Phase 1 roguing and Phase 3 Salicylic Acid foliar application is predicted to recover up to ₹52,920 (70% of potential loss).
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TAB 3: 16 CROP DATASETS HUB (4 Crops x 4 Datasets) -->
+            <!-- ========================================== -->
+            <section id="tab-datasets" class="tab-pane">
+                <div class="page-intro">
+                    <h2>16 Crop Health & Pathology Datasets Hub</h2>
+                    <p>4 Datasets per Crop (Tomato, Rice, Corn/Maize, Wheat) curated from ICAR, IIT Delhi, VIT Vellore, and open repositories.</p>
+                </div>
+
+                <!-- Crop Filter Tabs for Datasets -->
+                <div class="filter-bar">
+                    <button type="button" class="filter-btn active" data-dataset-crop="all">All 16 Datasets</button>
+                    <button type="button" class="filter-btn" data-dataset-crop="tomato">Tomato (4 Datasets)</button>
+                    <button type="button" class="filter-btn" data-dataset-crop="rice">Rice (4 Datasets)</button>
+                    <button type="button" class="filter-btn" data-dataset-crop="corn">Corn / Maize (4 Datasets)</button>
+                    <button type="button" class="filter-btn" data-dataset-crop="wheat">Wheat (4 Datasets)</button>
+                </div>
+
+                <!-- 16 Datasets Grid -->
+                <div class="datasets-grid" id="datasetsGrid">
+                    <!-- Populated dynamically by JS -->
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TAB 4: FACULTY EVALUATION & ML SCORES MATRIX -->
+            <!-- ========================================== -->
+            <section id="tab-ml-scores" class="tab-pane">
+                <div class="page-intro">
+                    <h2>Faculty Evaluation: Model 1 (YOLO) vs Model 2 (Deep CNN) ML Scores Per Dataset</h2>
+                    <p>Empirical breakdown comparing <strong>Model 1 (YOLO Object Detection)</strong> vs <strong>Model 2 (Deep CNN Feature Explainer)</strong> across all 16 agricultural datasets.</p>
+                </div>
+
+                <!-- Crop Filter for Benchmark Table -->
+                <div class="benchmark-filter-bar">
+                    <span class="filter-label">Filter Benchmark by Crop:</span>
+                    <button type="button" class="bm-filter-btn active" data-bm-crop="all">All 16 Datasets</button>
+                    <button type="button" class="bm-filter-btn" data-bm-crop="tomato">Tomato Datasets (4)</button>
+                    <button type="button" class="bm-filter-btn" data-bm-crop="rice">Rice Datasets (4)</button>
+                    <button type="button" class="bm-filter-btn" data-bm-crop="corn">Corn / Maize Datasets (4)</button>
+                    <button type="button" class="bm-filter-btn" data-bm-crop="wheat">Wheat Datasets (4)</button>
+                </div>
+
+                <!-- Model Comparison Table -->
+                <div class="table-card">
+                    <div class="table-responsive">
+                        <table class="benchmark-table">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2">Crop</th>
+                                    <th rowspan="2">Dataset Name</th>
+                                    <th colspan="4" class="model-col-header">Model 1: YOLO Object Detector</th>
+                                    <th colspan="4" class="model-col-header">Model 2: Deep CNN Feature Explainer</th>
+                                </tr>
+                                <tr>
+                                    <th>Model Variant</th>
+                                    <th>Accuracy</th>
+                                    <th>F1-Score</th>
+                                    <th>mAP / Latency</th>
+                                    <th>Model Variant</th>
+                                    <th>Accuracy</th>
+                                    <th>F1-Score</th>
+                                    <th>Params / Latency</th>
+                                </tr>
+                            </thead>
+                            <tbody id="benchmarkTableBody">
+                                <!-- Populated dynamically by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Visualizers Grid -->
+                <div class="viz-grid">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <span class="panel-tag">CHART</span>
+                            <div>
+                                <h3>F1-Score vs Inference Latency Tradeoff</h3>
+                                <p>Faculty Performance Assessment Chart</p>
+                            </div>
+                        </div>
+                        <div class="chart-box" id="tradeoffChart">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <span class="panel-tag">MATRIX</span>
+                            <div>
+                                <h3>Model Confusion Matrix Summary</h3>
+                                <p>Classification Precision vs Misclassification Rates</p>
+                            </div>
+                        </div>
+                        <div class="matrix-box" id="confusionMatrixBox">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TAB 5: INDIA REGIONAL WEATHER TRACKER API -->
+            <!-- ========================================== -->
+            <section id="tab-weather" class="tab-pane">
+                <div class="page-intro">
+                    <h2>Live Indian Regional Agricultural Weather API</h2>
+                    <p>Real-time meteorological monitoring across key Indian agricultural zones with automated weather-triggered epidemic warnings.</p>
+                </div>
+
+                <div class="weather-hub-grid">
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <span class="panel-tag">STATIONS</span>
+                            <div>
+                                <h3>Select Regional Station</h3>
+                                <p>Indian Meteorological API Locations</p>
+                            </div>
+                        </div>
+                        <div class="hub-list" id="hubList">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+
+                    <div class="panel-card weather-live-card">
+                        <div class="panel-header">
+                            <span class="panel-tag">LIVE API</span>
+                            <div>
+                                <h3 id="liveHubTitle">Live Meteorological Telemetry: Nashik, Maharashtra</h3>
+                                <p id="liveHubCoords">Lat: 20.00°N, Lon: 73.78°E | Crop Focus: Tomato & Grapes</p>
+                            </div>
+                        </div>
+
+                        <div class="telemetry-grid">
+                            <div class="telem-box">
+                                <div class="telem-info">
+                                    <span class="telem-label">Temperature</span>
+                                    <span class="telem-value" id="liveTemp">32.4 °C</span>
+                                    <span class="telem-sub">Thermal Stress: High</span>
+                                </div>
+                            </div>
+
+                            <div class="telem-box">
+                                <div class="telem-info">
+                                    <span class="telem-label">Relative Humidity</span>
+                                    <span class="telem-value" id="liveHum">76 %</span>
+                                    <span class="telem-sub">Foliar Wetness: High</span>
+                                </div>
+                            </div>
+
+                            <div class="telem-box">
+                                <div class="telem-info">
+                                    <span class="telem-label">Weekly Rainfall</span>
+                                    <span class="telem-value" id="liveRain">38 mm</span>
+                                    <span class="telem-sub">Monsoon Precipitation</span>
+                                </div>
+                            </div>
+
+                            <div class="telem-box">
+                                <div class="telem-info">
+                                    <span class="telem-label">Wind Speed</span>
+                                    <span class="telem-value" id="liveWind">14.2 km/h</span>
+                                    <span class="telem-sub">Vector Spreading Rate</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="weather-analysis-note">
+                            <strong>Live Weather Impact Analysis:</strong> Ambient temperature (32.4°C) combined with high relative humidity (76%) triggers optimal proliferation conditions for <em>Bemisia tabaci</em> (Whitefly vectors) and fungal <em>Phytophthora infestans</em> spores across Nashik district farmlands.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- TAB 6: 16 RESEARCH PAPERS & PUBLICATIONS -->
+            <!-- ========================================== -->
+            <section id="tab-research" class="tab-pane">
+                <div class="page-intro">
+                    <h2>16 Peer-Reviewed Research Papers (2024–2025)</h2>
+                    <p>4 Papers per Crop domain (Tomato, Rice, Corn/Maize, Wheat) published in leading IEEE, MDPI, and Elsevier journals.</p>
+                </div>
+
+                <!-- Paper Crop Filter Bar -->
+                <div class="filter-bar">
+                    <button type="button" class="paper-filter-btn active" data-paper-crop="all">All 16 Research Papers</button>
+                    <button type="button" class="paper-filter-btn" data-paper-crop="tomato">Tomato Papers (4)</button>
+                    <button type="button" class="paper-filter-btn" data-paper-crop="rice">Rice Papers (4)</button>
+                    <button type="button" class="paper-filter-btn" data-paper-crop="corn">Corn / Maize Papers (4)</button>
+                    <button type="button" class="paper-filter-btn" data-paper-crop="wheat">Wheat Papers (4)</button>
+                </div>
+
+                <div class="papers-list-grid" id="papersListGrid">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Global Footer -->
+        <footer class="footer">
+            <p>AgriShield AI &copy; 2026 | Developed for IOE414 Deep Learning & AI in Agriculture | Precision Diagnostic System</p>
+        </footer>
+
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
